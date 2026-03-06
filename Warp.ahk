@@ -6,8 +6,6 @@
 
 global lastActiveWindow := 0
 global lastMouseClickTime := 0
-global HSHELL_WINDOWACTIVATED := 4
-global HSHELL_RUDEAPPACTIVATED := 32772
 
 ; We have to register the window to receive global shell hook events.
 DllCall("RegisterShellHookWindow", "Ptr", A_ScriptHwnd)
@@ -17,8 +15,10 @@ OnMessage(msgNum, OnShellMessage)
 
 OnShellMessage(wParam, lParam, msg, hwnd)
 {
-	global lastActiveWindow, lastMouseClickTime, HSHELL_WINDOWACTIVATED,
-        HSHELL_RUDEAPPACTIVATED
+	global lastActiveWindow, lastMouseClickTime
+    static HSHELL_WINDOWACTIVATED := 4
+    static HSHELL_RUDEAPPACTIVATED := 32772
+    
 	if (wParam = HSHELL_WINDOWACTIVATED || wParam = HSHELL_RUDEAPPACTIVATED) {
         Sleep(100)
         hwnd := WinExist("A")
@@ -46,18 +46,8 @@ OnShellMessage(wParam, lParam, msg, hwnd)
 	}
 }
 
-*~LButton:: {
-    global lastMouseClickTime
-	lastMouseClickTime := A_TickCount
-    return
-}
-
-*~RButton:: {
-    global lastMouseClickTime
-	lastMouseClickTime := A_TickCount
-    return
-}
-
+*~LButton::
+*~RButton::
 *~MButton:: {
     global lastMouseClickTime
 	lastMouseClickTime := A_TickCount
